@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>F4 FAMILY RESTAURANT • Book Your Table</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&family=Montserrat:wght@400;600&family=Cormorant+Garamond:wght@500;600;700&family=Bodoni+Moda:wght@500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="book_c.css">
+</head>
+<body>
+
+<header>
+    <nav>
+        <div class="logo">
+            <img src="r_logo.jpg" alt="F4 Logo">
+            <h1 id="n">F4 FAMILY RESTAURANT</h1>
+        </div>
+
+        <div class="b">
+            <a href="Capstone.html" class="b1">HOME</a>
+            <a href="menu.html" class="b1">MENU</a>
+            <a href="gallery.html" class="b1">GALLERY</a>
+            <a href="contact.html" class="b1">CONTACT</a>
+            <a href="book.html" class="b1">BOOK</a>
+<a href="log.html" class="but">LOGIN/REGISTER</a>
+        </div>
+    </nav>
+</header>
+
+<main>
+    <form id="f">
+        <div class="form-badge">INSTANT CONFIRMATION</div>
+
+        <label>👤 NAME:</label>
+        <input type="text" id="name" placeholder="Enter your full name">
+        <span class="error" id="name-error"></span>
+
+        <label>✉️ EMAIL:</label>
+        <input type="email" id="email" placeholder="your@email.com">
+        <span class="error" id="email-error"></span>
+
+        <label>📱 PHONE:</label>
+        <input type="tel" id="phone" placeholder="+91 XXXXXXXXXX">
+        <span class="error" id="phone-error"></span>
+
+        <label>👥 NUMBER OF GUESTS:</label>
+        <select id="guests">
+            <option value="">Select number of guests</option>
+            <option value="2">2 people</option>
+            <option value="3">3 people</option>
+            <option value="4">4 people</option>
+            <option value="5">5 people</option>
+            <option value="6">6 people</option>
+            <option value="7">7 people</option>
+            <option value="8">8+ people (Family special)</option>
+        </select>
+        <span class="error" id="guests-error"></span>
+
+        <label>📅 DATE:</label>
+        <input type="date" id="date">
+        <span class="error" id="date-error"></span>
+
+        <label>⏰ TIME:</label>
+        <input type="time" id="time">
+        <span class="error" id="time-error"></span>
+
+        <div class="time-slots">
+            <h3>✨ Suggested Time Slots (tap to select)</h3>
+            <div class="slots" id="slots"></div>
+        </div>
+
+        <label>🔑 VERIFICATION CODE:</label>
+        <div class="input-wrapper">
+            <input type="password" id="code" placeholder="Enter verification code">
+            <span id="eye" class="eye">👁️</span>
+        </div>
+        <span class="error" id="code-error"></span>
+
+        <label>📝 SPECIAL REQUESTS (optional):</label>
+        <textarea id="requests" placeholder="Allergies, baby seat, window view, anniversary surprise..."></textarea>
+
+        <input type="submit" id="sub" value="CONFIRM BOOKING">
+    </form>
+</main>
+
+<!-- Success Modal -->
+<div id="success-modal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>🎉 Table Reserved Successfully!</h2>
+        <div id="modal-booking-id" class="booking-id"></div>
+        
+        <div class="detail-row">
+            <span><strong>Name</strong></span>
+            <span id="modal-name"></span>
+        </div>
+        <div class="detail-row">
+            <span><strong>Date &amp; Time</strong></span>
+            <span id="modal-datetime"></span>
+        </div>
+        <div class="detail-row">
+            <span><strong>Guests</strong></span>
+            <span id="modal-guests"></span>
+        </div>
+        <div class="detail-row">
+            <span><strong>Phone</strong></span>
+            <span id="modal-phone"></span>
+        </div>
+        
+        <p>A confirmation has been sent to your email.<br>
+        <strong>We look forward to hosting your family!</strong></p>
+        
+        <button id="modal-close-btn" class="modal-btn">BACK TO HOME</button>
+    </div>
+</div>
+
+<footer>
+    © 2026 F4 Family Restaurant • All reservations confirmed instantly
+</footer>
+
+<script>
+// ====================== ENHANCED JAVASCRIPT ======================
+
+const form = document.getElementById('f');
+const modal = document.getElementById('success-modal');
+const closeModalBtn = document.querySelector('.close');
+const modalCloseMainBtn = document.getElementById('modal-close-btn');
+
+const nameInput = document.getElementById('name');
+const emailInput = document.getElementById('email');
+const phoneInput = document.getElementById('phone');
+const guestsSelect = document.getElementById('guests');
+const dateInput = document.getElementById('date');
+const timeInput = document.getElementById('time');
+const codeInput = document.getElementById('code');
+const requestsInput = document.getElementById('requests');
+const submitBtn = document.getElementById('sub');
+
+const nameError = document.getElementById('name-error');
+const emailError = document.getElementById('email-error');
+const phoneError = document.getElementById('phone-error');
+const guestsError = document.getElementById('guests-error');
+const dateError = document.getElementById('date-error');
+const timeError = document.getElementById('time-error');
+const codeError = document.getElementById('code-error');
+
+const eye = document.getElementById('eye');
+
+// Password visibility toggle
+eye.addEventListener('click', () => {
+    if (codeInput.type === 'password') {
+        codeInput.type = 'text';
+        eye.textContent = '🙈';
+    } else {
+        codeInput.type = 'password';
+        eye.textContent = '👁️';
+    }
+});
+
+// Set minimum date to today
+function setMinDate() {
+    const today = new Date().toISOString().split('T')[0];
+    dateInput.min = today;
+}
+
+// Show / Hide error
+function showError(el, message) {
+    el.style.display = 'block';
+    el.textContent = message;
+}
+
+function hideError(el) {
+    el.style.display = 'none';
+}
+
+// Validation functions
+function validateName() {
+    const val = nameInput.value.trim();
+    if (!val) return showError(nameError, 'Name is required');
+    if (val.length < 3) return showError(nameError, 'Name must be at least 3 characters');
+    hideError(nameError);
+    return true;
+}
+
+function validateEmail() {
+    const val = emailInput.value.trim();
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!val) return showError(emailError, 'Email is required');
+    if (!regex.test(val)) return showError(emailError, 'Please enter a valid email');
+    hideError(emailError);
+    return true;
+}
+
+function validatePhone() {
+    const val = phoneInput.value.trim();
+    const regex = /^\+?\d{10,15}$/;
+    if (!val) return showError(phoneError, 'Phone number is required');
+    if (!regex.test(val)) return showError(phoneError, 'Enter a valid phone number (10-15 digits)');
+    hideError(phoneError);
+    return true;
+}
+
+function validateGuests() {
+    if (!guestsSelect.value) return showError(guestsError, 'Please select number of guests');
+    hideError(guestsError);
+    return true;
+}
+
+function validateDate() {
+    if (!dateInput.value) return showError(dateError, 'Please select a date');
+    const today = new Date().toISOString().split('T')[0];
+    if (dateInput.value < today) return showError(dateError, 'Please select a future or today date');
+    hideError(dateError);
+    return true;
+}
+
+function validateTime() {
+    if (!timeInput.value) return showError(timeError, 'Please select a time');
+    hideError(timeError);
+    return true;
+}
+
+function validateCode() {
+    const val = codeInput.value.trim();
+    if (!val) return showError(codeError, 'Verification code is required');
+    if (val.length < 4) return showError(codeError, 'Code must be at least 4 characters');
+    hideError(codeError);
+    return true;
+}
+
+// Live validation
+function addLiveValidation() {
+    nameInput.addEventListener('input', validateName);
+    emailInput.addEventListener('input', validateEmail);
+    phoneInput.addEventListener('input', validatePhone);
+    guestsSelect.addEventListener('change', validateGuests);
+    dateInput.addEventListener('change', () => {
+        validateDate();
+        updateTimeSlots();
+    });
+    timeInput.addEventListener('change', validateTime);
+    codeInput.addEventListener('input', validateCode);
+}
+
+// Time slots - Innovative clickable feature
+function updateTimeSlots() {
+    const slotsContainer = document.getElementById('slots');
+    slotsContainer.innerHTML = '';
+
+    const suggestedTimes = ['11:00', '12:00', '13:00', '19:00', '20:00', '21:00', '21:30'];
+
+    suggestedTimes.forEach(time => {
+        const btn = document.createElement('button');
+        btn.className = 'slot-btn';
+        btn.textContent = time;
+        btn.addEventListener('click', () => {
+            timeInput.value = time;
+            validateTime();
+            document.querySelectorAll('.slot-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+        });
+        slotsContainer.appendChild(btn);
+    });
+}
+
+// Confetti Animation
+function launchConfetti() {
+    const canvas = document.createElement('canvas');
+    canvas.style.position = 'fixed';
+    canvas.style.top = '0';
+    canvas.style.left = '0';
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
+    canvas.style.zIndex = '10000';
+    canvas.style.pointerEvents = 'none';
+    document.body.appendChild(canvas);
+
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const particles = [];
+    const colors = ['#ff7a18', '#ffb347', '#f3d9ff', '#ff4444', '#00ff88'];
+
+    class Particle {
+        constructor() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height * 0.5 - 50;
+            this.size = Math.random() * 10 + 6;
+            this.speedX = Math.random() * 5 - 2.5;
+            this.speedY = Math.random() * 7 + 4;
+            this.color = colors[Math.floor(Math.random() * colors.length)];
+            this.rotation = Math.random() * 360;
+            this.rotationSpeed = Math.random() * 15 - 7;
+        }
+        update() {
+            this.y += this.speedY;
+            this.x += this.speedX;
+            this.rotation += this.rotationSpeed;
+            this.speedY += 0.18;
+        }
+        draw() {
+            ctx.save();
+            ctx.translate(this.x, this.y);
+            ctx.rotate(this.rotation * Math.PI / 180);
+            ctx.fillStyle = this.color;
+            ctx.fillRect(-this.size/2, -this.size/2, this.size, this.size);
+            ctx.restore();
+        }
+    }
+
+    for (let i = 0; i < 180; i++) {
+        particles.push(new Particle());
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        let alive = 0;
+        particles.forEach((p, i) => {
+            p.update();
+            p.draw();
+            if (p.y < canvas.height + 50) alive++;
+        });
+        if (alive > 0) requestAnimationFrame(animate);
+        else canvas.remove();
+    }
+    animate();
+}
+
+// Show success modal
+function showSuccessModal(booking) {
+    document.getElementById('modal-booking-id').textContent = `BOOKING #${booking.id}`;
+    document.getElementById('modal-name').textContent = booking.name;
+    document.getElementById('modal-datetime').textContent = `${booking.date} at ${booking.time}`;
+    document.getElementById('modal-guests').textContent = `${booking.guests} Guests`;
+    document.getElementById('modal-phone').textContent = booking.phone;
+
+    modal.style.display = 'flex';
+    launchConfetti();
+}
+
+// Form submit
+form.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    // Validate all fields
+    const validName = validateName();
+    const validEmail = validateEmail();
+    const validPhone = validatePhone();
+    const validGuests = validateGuests();
+    const validDate = validateDate();
+    const validTime = validateTime();
+    const validCode = validateCode();
+
+    if (!validName || !validEmail || !validPhone || !validGuests || !validDate || !validTime || !validCode) {
+        return;
+    }
+
+    // Disable button + loading state
+    const originalText = submitBtn.value;
+    submitBtn.value = "BOOKING YOUR TABLE...";
+    submitBtn.disabled = true;
+
+    setTimeout(() => {
+        const booking = {
+            id: 'F4-' + Math.floor(100000 + Math.random() * 900000),
+            name: nameInput.value.trim(),
+            email: emailInput.value.trim(),
+            phone: phoneInput.value.trim(),
+            guests: guestsSelect.value,
+            date: dateInput.value,
+            time: timeInput.value,
+            requests: requestsInput.value.trim() || "None"
+        };
+
+        // Save booking (demo)
+        let bookings = JSON.parse(localStorage.getItem('f4_bookings')) || [];
+        bookings.push(booking);
+        localStorage.setItem('f4_bookings', JSON.stringify(bookings));
+
+        // Reset form
+        form.reset();
+        document.querySelectorAll('.error').forEach(err => err.style.display = 'none');
+        document.querySelectorAll('.slot-btn').forEach(btn => btn.classList.remove('selected'));
+
+        showSuccessModal(booking);
+
+        submitBtn.value = originalText;
+        submitBtn.disabled = false;
+    }, 1400);
+});
+
+// Modal close
+closeModalBtn.addEventListener('click', () => modal.style.display = 'none');
+modalCloseMainBtn.addEventListener('click', () => modal.style.display = 'none');
+
+// Initialize
+function init() {
+    setMinDate();
+    addLiveValidation();
+    updateTimeSlots();
+    
+    console.log('%c✅ F4 Booking Form Enhanced Successfully!', 'color:#ff7a18; font-weight:700;');
+}
+
+window.onload = init;
+</script>
+<form id="bookingForm">
+    <input type="text" id="name" placeholder="Name">
+    <input type="email" id="email" placeholder="Email">
+    <input type="tel" id="phone" placeholder="Phone">
+    </form>
+
+<script>
+    window.onload = function() {
+        const session = sessionStorage.getItem("activeUser");
+        if(session) {
+            const user = JSON.parse(session);
+            // Automatically Fill Data
+            document.getElementById('name').value = user.user;
+            document.getElementById('email').value = user.email;
+            document.getElementById('phone').value = user.phone;
+        }
+    }
+    
+</script>
+</body>
+</html>

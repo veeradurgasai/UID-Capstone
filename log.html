@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication | F4 FAMILY RESTAURANT</title>
+    
+    <link rel="stylesheet" href="Capstone_c.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Montserrat:wght@400;600&family=Cormorant+Garamond:wght@600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --accent: #fea900;
+            --glass: rgba(0, 0, 0, 0.85);
+            --border: rgba(255, 255, 255, 0.15);
+        }
+
+        .auth-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 100px 20px 40px;
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 450px;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 40px;
+            border-radius: 24px;
+            border: 1px solid var(--border);
+            color: white;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .auth-card h2 {
+            font-family: 'Cormorant Garamond', serif;
+            color: var(--accent);
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--accent);
+        }
+
+        input, select {
+            width: 100%;
+            padding: 14px 15px 14px 50px;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--accent);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        option { background: #1a1a1a; color: white; }
+
+        /* Premium Glass Button */
+        .but-auth {
+            display: flex;
+            width: 100%;
+            align-items: center;
+            justify-content: center;
+            padding: 14px;
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .but-auth:hover {
+            background: var(--accent);
+            color: #000;
+            border-color: var(--accent);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(254, 169, 0, 0.4);
+        }
+
+        .toggle-link {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 14px;
+            color: #bbb;
+        }
+
+        .toggle-link span {
+            color: var(--accent);
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .err-msg {
+            color: #ff4d4d;
+            font-size: 13px;
+            text-align: center;
+            margin-bottom: 15px;
+            font-weight: 500;
+            min-height: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <nav>
+        <div class="logo">
+            <img src="r_logo.jpg" alt="Logo">
+            <h1 id="n">F4 FAMILY RESTAURANT</h1>
+        </div>
+        <div class="b">
+            <a href="Capstone.html" class="b1">HOME</a>
+            <a href="book.html" class="b1">BOOKING</a>
+            <a href="log.html" class="b1" style="color: var(--accent);">LOGIN</a>
+        </div>
+    </nav>
+</header>
+
+<main class="auth-wrapper">
+    <div class="auth-card">
+        
+        <div id="loginBox">
+            <h2>Guest Login</h2>
+            <div class="err-msg" id="loginErr"></div>
+            
+            <div class="input-group">
+                <i class="fas fa-user"></i>
+                <input type="text" id="lUser" placeholder="Username">
+            </div>
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="lPass" placeholder="Password">
+            </div>
+            <div class="input-group">
+                <i class="fas fa-user-tag"></i>
+                <select id="lRole">
+                    <option value="user">Login as Customer</option>
+                    <option value="manager">Login as Manager</option>
+                </select>
+            </div>
+            
+            <button class="but-auth" onclick="authAction.login()">Sign In</button>
+            <p class="toggle-link">New guest? <span onclick="view.switch('reg')">Create Account</span></p>
+        </div>
+
+        <div id="regBox" style="display:none;">
+            <h2>Register</h2>
+            <div class="err-msg" id="regErr"></div>
+            
+            <div class="input-group">
+                <i class="fas fa-user"></i>
+                <input type="text" id="rUser" placeholder="Username">
+            </div>
+            <div class="input-group">
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="rEmail" placeholder="Email Address">
+            </div>
+            <div class="input-group">
+                <i class="fas fa-phone"></i>
+                <input type="tel" id="rPhone" placeholder="Phone Number">
+            </div>
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="rPass" placeholder="Password">
+            </div>
+            <div class="input-group">
+                <i class="fas fa-user-shield"></i>
+                <select id="rRole">
+                    <option value="user">Customer Account</option>
+                    <option value="manager">Manager Account</option>
+                </select>
+            </div>
+            
+            <button class="but-auth" onclick="authAction.register()">Register</button>
+            <p class="toggle-link">Already a member? <span onclick="view.switch('login')">Login</span></p>
+        </div>
+
+    </div>
+</main>
+
+<script>
+    const view = {
+        switch: (type) => {
+            document.getElementById('loginBox').style.display = (type === 'login' ? 'block' : 'none');
+            document.getElementById('regBox').style.display = (type === 'reg' ? 'block' : 'none');
+            document.getElementById('loginErr').innerText = "";
+            document.getElementById('regErr').innerText = "";
+        }
+    };
+
+    const authAction = {
+        validateUsername: (name) => {
+            // Must contain at least one letter, prevents pure numbers
+            return /^(?=.*[a-zA-Z])[a-zA-Z0-9_]{3,15}$/.test(name);
+        },
+
+        register: () => {
+            const user = document.getElementById('rUser').value.trim();
+            const email = document.getElementById('rEmail').value.trim();
+            const phone = document.getElementById('rPhone').value.trim();
+            const pass = document.getElementById('rPass').value.trim();
+            const role = document.getElementById('rRole').value;
+
+            if (!authAction.validateUsername(user)) {
+                return document.getElementById('regErr').innerText = "Username must include letters (3-15 chars)";
+            }
+            if (!email.includes("@")) {
+                return document.getElementById('regErr').innerText = "Invalid Email";
+            }
+            if (phone.length < 10) {
+                return document.getElementById('regErr').innerText = "Invalid Phone Number";
+            }
+            if (pass.length < 5) {
+                return document.getElementById('regErr').innerText = "Password too short";
+            }
+
+            const userData = { user, email, phone, pass, role };
+            localStorage.setItem(`f4_account_${user}`, JSON.stringify(userData));
+            alert("Registration Successful!");
+            view.switch('login');
+        },
+
+        login: () => {
+            const user = document.getElementById('lUser').value.trim();
+            const pass = document.getElementById('lPass').value.trim();
+            const role = document.getElementById('lRole').value;
+            
+            const stored = localStorage.getItem(`f4_account_${user}`);
+            if (stored) {
+                const account = JSON.parse(stored);
+                // Check if password AND role matches
+                if (account.pass === pass && account.role === role) {
+                    sessionStorage.setItem("f4_active_session", JSON.stringify(account));
+                    window.location.href = "Capstone.html";
+                } else if (account.pass !== pass) {
+                    document.getElementById('loginErr').innerText = "Incorrect Password";
+                } else {
+                    document.getElementById('loginErr').innerText = "Incorrect Role selected";
+                }
+            } else {
+                document.getElementById('loginErr').innerText = "User not found";
+            }
+        }
+    };
+
+    // Auto-wipe session on refresh to keep content "gone"
+    window.onbeforeunload = function() {
+        sessionStorage.removeItem("f4_active_session");
+    };
+</script>
+
+</body>
+</html>

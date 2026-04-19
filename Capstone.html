@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>F4 FAMILY RESTAURANT</title>
+
+<link rel="stylesheet" href="Capstone_c.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Montserrat:wght@400;600&family=Cormorant+Garamond:wght@500;600;700&family=Bodoni+Moda:wght@500;600;700&display=swap" rel="stylesheet">
+<script id="btnjs01">
+document.querySelector(".book-btn").addEventListener("click", function(){
+alert("Table Booked Successfully!");
+});
+</script>
+
+</head>
+
+<body>
+
+<header>
+
+<nav>
+
+<div class="logo">
+<img src="r_logo.jpg">
+<h1 id="n">F4 FAMILY RESTAURANT</h1>
+</div>
+
+<div class="b">
+<a href="Capstone.html" class="b1">HOME</a>
+<a href="menu.html" class="b1">MENU</a>
+<a href="gallery.html" class="b1">GALLERY</a>
+<a href="contact.html"class="b1">CONTACT</a>
+<a href="book.html" class="b1">BOOK</a>
+<a href="log.html" class="but">LOGIN/REGISTER</a>
+</div>
+
+</nav>
+
+</header>
+
+<main>
+
+
+
+<div class="hero-text">
+
+<h1>BEST QUALITY FOOD</h1>
+
+<p>
+Lorem ipsum dolor sit amet consectetur adipisicing elit.
+Molestias provident laborum recusandae delectus corrupti
+reprehenderit error distinctio eligendi qui consequuntur.
+</p><br>
+
+<a href="book.html"><button class="book-btn">BOOK A TABLE</button></a>
+
+</div>
+// Place this inside the <script> tag of Capstone.html
+document.addEventListener("DOMContentLoaded", () => {
+    const sessionData = sessionStorage.getItem("f4_session");
+    const navLinks = document.querySelector(".b");
+    const logoTitle = document.getElementById("n");
+
+    if (sessionData) {
+        const user = JSON.parse(sessionData);
+        logoTitle.innerText = "HELLO, " + user.user.toUpperCase();
+        
+        // Replace Login link with Logout link
+        const loginLink = document.querySelector('a[href="log.html"]');
+        if (loginLink) {
+            loginLink.innerText = "LOGOUT";
+            loginLink.href = "#";
+            loginLink.onclick = () => {
+                sessionStorage.removeItem("f4_session");
+                location.reload();
+            };
+        }
+    }
+});
+
+// STRICTURE REFRESH RULE: Content goes away on refresh
+window.onbeforeunload = function() {
+    sessionStorage.removeItem("f4_session");
+};
+
+</main>
+
+<footer>
+
+</footer>
+
+</body>
+</html>
